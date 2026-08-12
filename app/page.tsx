@@ -164,7 +164,7 @@ function SectionBackground({ index }: { index: number }) {
 
 /* ── Hero section ────────────────────────────────────────────────────────── */
 function HeroContent() {
-  const fadeUp = { hidden: { opacity: 0, y: 28 }, show: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.1, duration: 0.65, ease: [0.16, 1, 0.3, 1] } }) };
+  const fadeUp = { hidden: { opacity: 0, y: 28 }, show: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.1, duration: 0.65, ease: [0.16, 1, 0.3, 1] as const } }) };
   return (
     <div className="w-full h-full flex items-center px-6 md:px-16 xl:px-48">
       <div className="max-w-3xl space-y-6">
@@ -299,6 +299,12 @@ const TOTAL_SECTIONS = 1 + PROJECTS.length + 2; // hero + projects + skills + co
 /* ════════════════════════════════════════════════════════════════════════════
    ROOT PAGE
    ════════════════════════════════════════════════════════════════════════════ */
+const sectionVariants = {
+  enter: (d: number) => ({ opacity: 0, x: d === 1 ? 80 : -80 }),
+  center: { opacity: 1, x: 0 },
+  exit: (d: number) => ({ opacity: 0, x: d === 1 ? -60 : 60 }),
+};
+
 export default function Home() {
   const [booted, setBooted] = useState(false);
   const [section, setSection] = useState(0);
@@ -389,10 +395,11 @@ export default function Home() {
           <motion.div
             key={`section-${section}`}
             custom={direction}
-            initial={(d: number) => ({ opacity: 0, x: d === 1 ? 80 : -80 })}
-            animate={{ opacity: 1, x: 0 }}
-            exit={(d: number) => ({ opacity: 0, x: d === 1 ? -60 : 60 })}
-            transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+            variants={sectionVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] as const }}
             className="absolute inset-0"
           >
             {section === 0 && <HeroContent />}
