@@ -28,9 +28,15 @@ export default function BootSequence({ onComplete }: Props) {
   const indexRef = useRef(0);
 
   useEffect(() => {
+    // Reset on Strict Mode remount
+    indexRef.current = 0;
+    setVisibleLines([]);
+    setDone(false);
+
     const interval = setInterval(() => {
-      if (indexRef.current < BOOT_LINES.length) {
-        setVisibleLines((prev) => [...prev, BOOT_LINES[indexRef.current]]);
+      const line = BOOT_LINES[indexRef.current];
+      if (line !== undefined) {
+        setVisibleLines((prev) => [...prev, line]);
         indexRef.current++;
       } else {
         clearInterval(interval);
@@ -87,9 +93,9 @@ export default function BootSequence({ onComplete }: Props) {
                   <span
                     style={{
                       color:
-                        line.includes("ONLINE") || line.includes("✓") || line.includes("nominal")
+                        line?.includes("ONLINE") || line?.includes("✓") || line?.includes("nominal")
                           ? "#2DD4BF"
-                          : line.includes("Launching")
+                          : line?.includes("Launching")
                           ? "#C7B27B"
                           : "rgba(226,232,240,0.6)",
                     }}

@@ -76,7 +76,7 @@ function XOPanel({ onClose }: { onClose: () => void }) {
         </button>
       </div>
       <iframe
-        src="https://noughtsandcrosses-production.up.railway.app"
+        src="https://noughts-and-crosses-sepia.vercel.app"
         className="flex-1 w-full"
         title="NoughtsAndCrosses game"
         sandbox="allow-scripts allow-same-origin allow-forms"
@@ -302,11 +302,16 @@ const TOTAL_SECTIONS = 1 + PROJECTS.length + 2; // hero + projects + skills + co
 export default function Home() {
   const [booted, setBooted] = useState(false);
   const [section, setSection] = useState(0);
+  const [direction, setDirection] = useState(1);
   const [xoOpen, setXoOpen] = useState(false);
   const scrolling = useRef(false);
 
   const goTo = useCallback((i: number) => {
-    setSection(Math.max(0, Math.min(TOTAL_SECTIONS - 1, i)));
+    setSection((prev) => {
+      const next = Math.max(0, Math.min(TOTAL_SECTIONS - 1, i));
+      if (next !== prev) setDirection(next > prev ? 1 : -1);
+      return next;
+    });
   }, []);
 
   /* Wheel handler */
@@ -380,12 +385,13 @@ export default function Home() {
           <SectionBackground key={`bg-${section}`} index={section} />
         </AnimatePresence>
 
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" custom={direction}>
           <motion.div
             key={`section-${section}`}
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -30 }}
+            custom={direction}
+            initial={(d: number) => ({ opacity: 0, x: d === 1 ? 80 : -80 })}
+            animate={{ opacity: 1, x: 0 }}
+            exit={(d: number) => ({ opacity: 0, x: d === 1 ? -60 : 60 })}
             transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
             className="absolute inset-0"
           >

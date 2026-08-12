@@ -28,6 +28,20 @@ export const PROJECTS: Project[] = [
     bgClass: "bg-splitter",
   },
   {
+    id: "noughts-crosses",
+    title: "NoughtsAndCrosses",
+    subtitle: "XO / Tic-Tac-Toe — Live",
+    description:
+      "Classic Noughts & Crosses served via FastAPI with a clean HTML/CSS frontend. Two-player mode with game state managed server-side. The simplest possible full-stack architecture — REST API powering a zero-JS game UI.",
+    techStack: ["Python", "FastAPI", "HTML", "CSS", "Uvicorn"],
+    githubUrl: "https://github.com/EliteGamer007/NoughtsAndCrosses",
+    liveUrl: "https://noughts-and-crosses-sepia.vercel.app",
+    status: "online",
+    accent: "#2DD4BF",
+    funFact: "Entire game state fits in a single 9-element Python list — sub-1ms move processing",
+    bgClass: "bg-xo",
+  },
+  {
     id: "f1-telemetry",
     title: "F1 Telemetry Dashboard",
     subtitle: "Live Race Analytics",
@@ -65,20 +79,6 @@ export const PROJECTS: Project[] = [
     accent: "#C7B27B",
     funFact: "R² = 0.91 on holdout set — session depth is the single strongest purchase predictor",
     bgClass: "bg-ml",
-  },
-  {
-    id: "noughts-crosses",
-    title: "NoughtsAndCrosses",
-    subtitle: "XO / Tic-Tac-Toe — Live",
-    description:
-      "Classic Noughts & Crosses served via FastAPI with a clean HTML/CSS frontend. Two-player mode with game state managed server-side. The simplest possible full-stack architecture — REST API powering a zero-JS game UI.",
-    techStack: ["Python", "FastAPI", "HTML", "CSS", "Uvicorn"],
-    githubUrl: "https://github.com/EliteGamer007/NoughtsAndCrosses",
-    liveUrl: "https://noughtsandcrosses-production.up.railway.app",
-    status: "online",
-    accent: "#2DD4BF",
-    funFact: "Entire game state fits in a single 9-element Python list — sub-1ms move processing",
-    bgClass: "bg-xo",
   },
   {
     id: "quiz-master",
