@@ -1,0 +1,168 @@
+@import "tailwindcss";
+
+/* ─── Tailwind v4 CSS-first theme ─────────────────────────────────────── */
+@theme {
+  /* Base palette */
+  --color-sapphire-950: #060A14;
+  --color-sapphire-900: #0B1120;
+  --color-sapphire-800: #111827;
+  --color-sapphire-700: #1a2540;
+
+  /* Brass / gold */
+  --color-brass-300: #D4C08E;
+  --color-brass-400: #C7B27B;
+  --color-brass-500: #A38E54;
+  --color-brass-600: #7A6A3A;
+
+  /* Electric teal / cyan */
+  --color-electric-300: #5EEAD4;
+  --color-electric-400: #2DD4BF;
+  --color-electric-500: #14B8A6;
+  --color-electric-600: #0D9488;
+
+  /* Typography */
+  --font-sans: var(--font-geist-sans), "Inter", system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), "JetBrains Mono", monospace;
+
+  /* Animation easings */
+  --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ─── Global base styles ───────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  background-color: var(--color-sapphire-950);
+  color: #e2e8f0;
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ─── Selection ────────────────────────────────────────────────────────── */
+::selection {
+  background-color: var(--color-electric-500);
+  color: var(--color-sapphire-950);
+}
+
+/* ─── Scrollbar ────────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-sapphire-900);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-electric-600);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-electric-400);
+}
+
+/* ─── Swiper overrides ─────────────────────────────────────────────────── */
+.swiper-pagination-bullet {
+  background: var(--color-brass-400) !important;
+  opacity: 0.4 !important;
+  width: 6px !important;
+  height: 6px !important;
+  transition: all 0.3s ease !important;
+}
+.swiper-pagination-bullet-active {
+  opacity: 1 !important;
+  width: 24px !important;
+  border-radius: 3px !important;
+}
+.swiper-button-next,
+.swiper-button-prev {
+  color: var(--color-electric-400) !important;
+  width: 44px !important;
+  height: 44px !important;
+}
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+}
+
+/* ─── Noise texture overlay (subtle grain effect) ──────────────────────── */
+.noise-overlay::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.025;
+}
+
+/* ─── Gradient border utility ──────────────────────────────────────────── */
+.gradient-border {
+  position: relative;
+}
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--color-electric-500), var(--color-brass-500));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ─── Glow effects ─────────────────────────────────────────────────────── */
+.glow-electric {
+  box-shadow: 0 0 30px rgba(20, 184, 166, 0.15), 0 0 60px rgba(20, 184, 166, 0.05);
+}
+.glow-brass {
+  box-shadow: 0 0 30px rgba(163, 142, 84, 0.15), 0 0 60px rgba(163, 142, 84, 0.05);
+}
+
+/* ─── Grid background pattern ──────────────────────────────────────────── */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(20, 184, 166, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20, 184, 166, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* ─── Vertical text ────────────────────────────────────────────────────── */
+.vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+}
+
+/* ─── Tag pill ─────────────────────────────────────────────────────────── */
+.tech-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background-color: rgba(20, 184, 166, 0.1);
+  color: var(--color-electric-400);
+  border: 1px solid rgba(20, 184, 166, 0.25);
+  white-space: nowrap;
+}
+
+/* ─── Fixed viewport for scrolljack ────────────────────────────────────── */
+html, body {
+  overflow: hidden;
+  height: 100%;
+}
