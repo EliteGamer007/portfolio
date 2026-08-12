@@ -71,14 +71,6 @@ export default function BootSequence({ onComplete }: Props) {
           />
 
           <div className="relative max-w-2xl w-full">
-            {/* Header */}
-            <div className="mb-6 flex items-center gap-3">
-              <div className="w-2.5 h-2.5 rounded-full bg-[#2DD4BF] animate-pulse" />
-              <span className="font-mono text-xs text-[#2DD4BF] uppercase tracking-[0.3em]">
-                PORTFOLIO OS v1.0 — BOOT SEQUENCE
-              </span>
-            </div>
-
             {/* Log output */}
             <div className="space-y-1 font-mono text-xs">
               {visibleLines.map((line, i) => (

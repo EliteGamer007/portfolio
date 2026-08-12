@@ -88,23 +88,18 @@ function XOPanel({ onClose }: { onClose: () => void }) {
 /* ── Project section ─────────────────────────────────────────────────────── */
 function ProjectSection({ project, onOpenXO }: { project: Project; onOpenXO: () => void }) {
   const isXO = project.id === "noughts-crosses";
-  const isOnline = project.status === "online";
 
   return (
-    <div className="w-full h-full flex items-end pb-16 xl:pb-20 px-6 md:px-16 xl:px-48">
-      <div className="max-w-2xl space-y-4">
+    <div className="w-full h-full flex flex-col lg:flex-row items-center justify-between pb-16 xl:pb-20 pt-24 px-6 md:px-16 xl:px-48 gap-8 lg:gap-16">
+      <div className="flex-1 max-w-xl space-y-4 z-10">
         {/* Status + index */}
         <div className="flex items-center gap-3 flex-wrap">
-          <span className="font-mono text-[9px] uppercase tracking-widest px-2.5 py-1 rounded-full"
-            style={{ background: `${project.accent}18`, color: project.accent, border: `1px solid ${project.accent}40` }}>
-            ● {isOnline ? "ONLINE" : project.status === "research" ? "RESEARCH" : "INACTIVE"}
-          </span>
           <span className="text-[10px] text-slate-500 uppercase tracking-widest font-mono">{project.subtitle}</span>
         </div>
 
         <h2 className="text-3xl md:text-5xl font-black tracking-tight" style={{ color: "#f8fafc" }}>{project.title}</h2>
 
-        <p className="text-sm text-slate-400 leading-relaxed max-w-xl">{project.description}</p>
+        <p className="text-sm text-slate-400 leading-relaxed">{project.description}</p>
 
         {/* Fun fact */}
         <div className="flex items-start gap-2 rounded-lg px-3 py-2.5" style={{ background: `${project.accent}0d`, border: `1px solid ${project.accent}22` }}>
@@ -128,20 +123,25 @@ function ProjectSection({ project, onOpenXO }: { project: Project; onOpenXO: () 
           {isXO && (
             <button onClick={onOpenXO}
               className="flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-lg transition-all hover:scale-105"
-              style={{ background: "linear-gradient(135deg,#14B8A6,#0D9488)", color: "#060A14" }}>
+              style={{ background: "#14B8A6", color: "#060A14" }}>
               <ArrowRight size={12} /> Play Live
             </button>
           )}
-          {isOnline && !isXO && project.liveUrl && (
+          {!isXO && project.liveUrl && (
             <a href={project.liveUrl} target="_blank" rel="noopener noreferrer"
               className="flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-lg transition-all hover:scale-105"
-              style={{ background: "linear-gradient(135deg,#14B8A6,#0D9488)", color: "#060A14" }}>
+              style={{ background: "#14B8A6", color: "#060A14" }}>
               <ExternalLink size={12} /> Live Instance
             </a>
           )}
-          {!isOnline && (
-            <span className="font-mono text-[9px] text-slate-600 uppercase tracking-widest">Not deployed yet</span>
-          )}
+        </div>
+      </div>
+
+      {/* Video Demo Placeholder */}
+      <div className="flex-1 w-full max-w-2xl relative rounded-xl overflow-hidden border z-10" style={{ borderColor: "rgba(255,255,255,0.05)", aspectRatio: "16/9", background: "rgba(6,10,20,0.6)", backdropFilter: "blur(12px)" }}>
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 border border-white/5 rounded-xl m-2 border-dashed">
+           <span className="font-mono text-[10px] uppercase tracking-widest text-slate-600">Video Demo Space</span>
+           <span className="font-mono text-[9px] text-slate-700">16:9 Aspect Ratio</span>
         </div>
       </div>
     </div>
@@ -157,7 +157,7 @@ function SectionBackground({ index }: { index: number }) {
     <motion.div key={index} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       transition={{ duration: 0.7 }} className="absolute inset-0 grid-bg">
       <div className="absolute inset-0" style={{ background: `radial-gradient(ellipse 60% 60% at 70% 50%, ${accent}07, transparent)` }} />
-      <div className="absolute inset-0" style={{ background: "linear-gradient(to right, rgba(6,10,20,0.9) 0%, rgba(6,10,20,0.4) 60%, rgba(6,10,20,0.7) 100%)" }} />
+      <div className="absolute inset-0" style={{ background: "rgba(6,10,20,0.75)" }} />
     </motion.div>
   );
 }
@@ -176,7 +176,7 @@ function HeroContent() {
         <motion.div variants={fadeUp} initial="hidden" animate="show" custom={1} className="relative">
           <h1 className="text-6xl md:text-8xl font-black tracking-tight leading-[0.93]" style={{ color: "#f8fafc" }}>
             Sanjeev<br />
-            <span style={{ background: "linear-gradient(90deg,#2DD4BF 0%,#14B8A6 50%,#C7B27B 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+            <span style={{ color: "#2DD4BF" }}>
               Srinivas
             </span>
           </h1>
@@ -189,7 +189,7 @@ function HeroContent() {
         </motion.p>
 
         <motion.div variants={fadeUp} initial="hidden" animate="show" custom={3}
-          className="w-16 h-px" style={{ background: "linear-gradient(90deg,#14B8A6,transparent)" }} />
+          className="w-16 h-px bg-[#14B8A6]/50" />
 
         <motion.p variants={fadeUp} initial="hidden" animate="show" custom={4}
           className="text-sm leading-relaxed text-slate-400 max-w-lg">
@@ -199,7 +199,7 @@ function HeroContent() {
         <motion.div variants={fadeUp} initial="hidden" animate="show" custom={5} className="flex flex-wrap gap-3">
           <a href="mailto:sanjnivas@gmail.com" id="hero-email"
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all hover:scale-105"
-            style={{ background: "linear-gradient(135deg,#14B8A6,#0D9488)", color: "#060A14", boxShadow: "0 0 20px rgba(20,184,166,0.3)" }}>
+            style={{ background: "#14B8A6", color: "#060A14" }}>
             <Mail size={13} /> sanjnivas@gmail.com
           </a>
           <a href="https://github.com/EliteGamer007" target="_blank" rel="noopener noreferrer" id="hero-github"
@@ -268,7 +268,7 @@ function ContactContent() {
         <p className="font-mono text-xs uppercase tracking-[0.3em]" style={{ color: "#14B8A6" }}>Get In Touch</p>
         <h2 className="text-5xl md:text-7xl font-black tracking-tight leading-[0.9]" style={{ color: "#f8fafc" }}>
           Let&apos;s Build<br />
-          <span style={{ background: "linear-gradient(90deg,#2DD4BF,#C7B27B)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+          <span style={{ color: "#2DD4BF" }}>
             Something Real.
           </span>
         </h2>
@@ -278,7 +278,7 @@ function ContactContent() {
         <div className="flex flex-wrap gap-3">
           <a href="mailto:sanjnivas@gmail.com" id="contact-email"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold transition-all hover:scale-105"
-            style={{ background: "linear-gradient(135deg,#14B8A6,#0D9488)", color: "#060A14", boxShadow: "0 0 28px rgba(20,184,166,0.25)" }}>
+            style={{ background: "#14B8A6", color: "#060A14" }}>
             <Mail size={14} /> sanjnivas@gmail.com
           </a>
           <a href="https://github.com/EliteGamer007" target="_blank" rel="noopener noreferrer" id="contact-github"

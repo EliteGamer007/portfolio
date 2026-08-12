@@ -76,42 +76,12 @@ interface Props {
 }
 
 export default function TelemetryLayer({ activeSection }: Props) {
-  const [latency, setLatency] = useState<number | null>(null);
-  const [status, setStatus] = useState<"online" | "offline" | "checking">("checking");
   const [sparkData, setSparkData] = useState<number[]>([3, 7, 5, 12, 8, 15, 10, 18, 14, 20, 16, 22]);
   const [alertIndex, setAlertIndex] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
-  const [uptime] = useState(() => {
-    const h = Math.floor(Math.random() * 48 + 1);
-    const m = Math.floor(Math.random() * 60);
-    return `${h}h ${m}m`;
-  });
-
-  /* Live ping simulation (real ping would need CORS headers on your server) */
-  const pingStatus = useCallback(async () => {
-    const start = performance.now();
-    try {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 3000);
-      await fetch("https://splitter-demo.sanjeev.dev/health", {
-        signal: controller.signal,
-        mode: "no-cors",
-      });
-      clearTimeout(timeout);
-      setLatency(Math.round(performance.now() - start));
-      setStatus("online");
-    } catch {
-      // Simulate stable latency when endpoint not reachable yet
-      setLatency(Math.floor(Math.random() * 30 + 18));
-      setStatus("online");
-    }
-  }, []);
 
   /* Sparkline ticker */
   useEffect(() => {
-    pingStatus();
-    const pingInterval = setInterval(pingStatus, 8000);
-
     const sparkInterval = setInterval(() => {
       setSparkData((prev) => {
         const next = [...prev.slice(1), Math.floor(Math.random() * 20 + 5)];
@@ -133,11 +103,10 @@ export default function TelemetryLayer({ activeSection }: Props) {
     }, 3000);
 
     return () => {
-      clearInterval(pingInterval);
       clearInterval(sparkInterval);
       clearTimeout(alertTimeout);
     };
-  }, [pingStatus]);
+  }, []);
 
   const alert = ALERTS[alertIndex];
 
@@ -148,33 +117,7 @@ export default function TelemetryLayer({ activeSection }: Props) {
         className="fixed left-0 top-0 bottom-0 z-40 hidden xl:flex flex-col justify-between py-8 px-4"
         style={{ width: "160px", pointerEvents: "none" }}
       >
-        {/* System status badge */}
         <div className="flex flex-col gap-3" style={{ pointerEvents: "auto" }}>
-          <div
-            className="rounded-lg px-3 py-2 flex flex-col gap-1.5"
-            style={{
-              background: "rgba(11,17,32,0.85)",
-              border: "1px solid rgba(45,212,191,0.15)",
-              backdropFilter: "blur(8px)",
-            }}
-          >
-            <div className="flex items-center gap-2">
-              <motion.div
-                animate={{ opacity: [1, 0.3, 1], scale: [1, 0.8, 1] }}
-                transition={{ repeat: Infinity, duration: 2.2 }}
-                className="w-1.5 h-1.5 rounded-full"
-                style={{ background: status === "online" ? "#2DD4BF" : "#ef4444" }}
-              />
-              <span className="font-mono text-[9px] uppercase tracking-widest" style={{ color: "#2DD4BF" }}>
-                {status === "checking" ? "CHECKING..." : status === "online" ? "SYSTEMS: ONLINE" : "DEGRADED"}
-              </span>
-            </div>
-            {latency !== null && (
-              <span className="font-mono text-[8px]" style={{ color: "rgba(226,232,240,0.4)" }}>
-                ping: {latency}ms · up {uptime}
-              </span>
-            )}
-          </div>
 
           {/* Section indicator */}
           <div
@@ -221,7 +164,7 @@ export default function TelemetryLayer({ activeSection }: Props) {
           className="mx-auto w-px"
           style={{
             height: "60px",
-            background: "linear-gradient(to bottom, rgba(45,212,191,0.2), transparent)",
+            background: "rgba(45,212,191,0.2)",
           }}
         />
       </div>
@@ -281,7 +224,7 @@ export default function TelemetryLayer({ activeSection }: Props) {
             className="w-px"
             style={{
               height: "40px",
-              background: "linear-gradient(to top, rgba(20,184,166,0.3), transparent)",
+              background: "rgba(20,184,166,0.3)",
             }}
           />
           <span
@@ -298,7 +241,7 @@ export default function TelemetryLayer({ activeSection }: Props) {
             className="w-px"
             style={{
               height: "40px",
-              background: "linear-gradient(to bottom, rgba(20,184,166,0.3), transparent)",
+              background: "rgba(20,184,166,0.3)",
             }}
           />
         </div>
