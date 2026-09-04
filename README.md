@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# portfolio-von-sanjeev.tech
 
-## Getting Started
-
-First, run the development server:
+Personal site for Sanjeev Srinivas — a horizontal rail of panels on the front page,
+with server-rendered case studies behind it.
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Layout
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+app/
+  page.tsx              the rail (server component, revalidates hourly)
+  work/[slug]/          one case study per project, prerendered
+  resume/               HTML résumé + print stylesheet; PDF in /public
+  api/dns/              DNS delegation inspector
+  opengraph-image.tsx   generated social cards (also per case study)
+components/
+  rail/                 Rail + panel components
+  diagrams/             hand-authored architecture SVGs
+  ui/                   modal, command palette, DNS checker, GitHub activity
+lib/
+  config.ts             identity and links — single source of truth
+  projects.ts           project content, notes, diagram keys
+  github.ts             live GitHub stats, degrades to null on failure
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Notes
 
-## Learn More
+**The rail.** Horizontal CSS scroll-snap, not scroll hijacking — momentum, trackpads,
+touch and the scrollbar all behave natively. A vertical wheel is translated to
+horizontal movement only when the panel under the cursor has nothing left to scroll
+itself. Programmatic jumps are tweened by hand rather than with `behavior: "smooth"`,
+which snapping cancels across multiple snap points and which some environments ignore
+entirely.
 
-To learn more about Next.js, take a look at the following resources:
+**Nothing on the page is fabricated.** The activity chart is real GitHub push data; if
+the API is unavailable the widget disappears rather than inventing numbers.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**CSS layering matters here.** Base element styles live in `@layer base` and component
+classes in `@layer components`, so Tailwind utilities can still override them. An
+unlayered rule beats every layered utility regardless of specificity.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Optional environment
 
-## Deploy on Vercel
+| Variable | Effect |
+| --- | --- |
+| `GITHUB_TOKEN` | Raises the GitHub API rate limit. Works fine without it — unauthenticated requests are cached for an hour. |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Adding a project
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Add an entry to `lib/projects.ts`. The rail panel, case-study route, OG image, sitemap
+entry and command-palette entry all follow from it. Set `diagram` only if there is a
+matching SVG in `components/diagrams/Diagrams.tsx`.
+
+## Still to do
+
+- Demo videos for the project panels
+- A photo for the hero
