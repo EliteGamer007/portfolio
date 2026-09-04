@@ -1,168 +1,587 @@
 @import "tailwindcss";
 
-/* ─── Tailwind v4 CSS-first theme ─────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════════════
+   THEME — one blue accent over an ink-navy ground. No second accent family.
+   ═══════════════════════════════════════════════════════════════════════════ */
 @theme {
-  /* Base palette */
-  --color-sapphire-950: #060A14;
-  --color-sapphire-900: #0B1120;
-  --color-sapphire-800: #111827;
-  --color-sapphire-700: #1a2540;
+  /* Ground */
+  --color-ink-950: #06090f;
+  --color-ink-900: #090d16;
+  --color-ink-850: #0c111c;
+  --color-ink-800: #111827;
+  --color-ink-700: #182034;
+  --color-ink-600: #232d45;
 
-  /* Brass / gold */
-  --color-brass-300: #D4C08E;
-  --color-brass-400: #C7B27B;
-  --color-brass-500: #A38E54;
-  --color-brass-600: #7A6A3A;
+  /* Accent — azure */
+  --color-azure-200: #c3d8ff;
+  --color-azure-300: #9dbcff;
+  --color-azure-400: #74a0ff;
+  --color-azure-500: #4f84f5;
+  --color-azure-600: #3568da;
+  --color-azure-700: #2450b4;
 
-  /* Electric teal / cyan */
-  --color-electric-300: #5EEAD4;
-  --color-electric-400: #2DD4BF;
-  --color-electric-500: #14B8A6;
-  --color-electric-600: #0D9488;
+  /* Type */
+  --color-paper: #e9edf7;
+  --color-paper-dim: #a3aec7;
+  --color-paper-mute: #6f7b96;
 
-  /* Typography */
-  --font-sans: var(--font-geist-sans), "Inter", system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), "JetBrains Mono", monospace;
+  --font-sans: var(--font-sans-src), "Inter", system-ui, sans-serif;
+  --font-mono: var(--font-mono-src), "JetBrains Mono", ui-monospace, monospace;
 
-  /* Animation easings */
-  --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* ─── Global base styles ───────────────────────────────────────────────── */
-*, *::before, *::after {
-  box-sizing: border-box;
+/* Semantic aliases used throughout the app */
+:root {
+  --line: rgba(140, 165, 220, 0.11);
+  --line-strong: rgba(140, 165, 220, 0.2);
+  --accent: var(--color-azure-400);
+  --accent-soft: rgba(116, 160, 255, 0.12);
+  --panel: #0d1320;
+  --rail-gap: clamp(1.5rem, 5vw, 6rem);
 }
 
-html {
-  scroll-behavior: smooth;
-  overflow-x: hidden;
+/* ═══════════════════════════════════════════════════════════════════════════
+   BASE
+   ═══════════════════════════════════════════════════════════════════════════ */
+/* These live in @layer base so Tailwind utilities can still override them.
+   Unlayered rules outrank every layered utility regardless of specificity —
+   an unlayered `h1,h2,h3 { margin: 0 }` silently kills every `mt-*`. */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-ink-950);
+    color: var(--color-paper);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    margin: 0;
+  }
+
+  ::selection {
+    background-color: var(--color-azure-500);
+    color: #fff;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 }
 
-body {
-  background-color: var(--color-sapphire-950);
-  color: #e2e8f0;
-  font-family: var(--font-sans);
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+/* Visible focus for keyboard users only — never a mouse-click ring. */
+:focus-visible {
+  outline: 2px solid var(--color-azure-400);
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
-/* ─── Selection ────────────────────────────────────────────────────────── */
-::selection {
-  background-color: var(--color-electric-500);
-  color: var(--color-sapphire-950);
-}
-
-/* ─── Scrollbar ────────────────────────────────────────────────────────── */
+/* ── Scrollbars ─────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--color-sapphire-900);
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-electric-600);
-  border-radius: 3px;
+  background: var(--color-ink-600);
+  border-radius: 99px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-electric-400);
+  background: var(--color-azure-700);
 }
 
-/* ─── Swiper overrides ─────────────────────────────────────────────────── */
-.swiper-pagination-bullet {
-  background: var(--color-brass-400) !important;
-  opacity: 0.4 !important;
-  width: 6px !important;
-  height: 6px !important;
-  transition: all 0.3s ease !important;
+/* ═══════════════════════════════════════════════════════════════════════════
+   THE RAIL — native horizontal scroll with snap. No scroll hijacking.
+   Momentum, trackpads, touch and the scrollbar all work because the browser
+   is doing the scrolling, not us.
+   ═══════════════════════════════════════════════════════════════════════════ */
+.rail {
+  display: flex;
+  height: 100dvh;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
 }
-.swiper-pagination-bullet-active {
-  opacity: 1 !important;
-  width: 24px !important;
-  border-radius: 3px !important;
-}
-.swiper-button-next,
-.swiper-button-prev {
-  color: var(--color-electric-400) !important;
-  width: 44px !important;
-  height: 44px !important;
-}
-.swiper-button-next::after,
-.swiper-button-prev::after {
-  font-size: 18px !important;
-  font-weight: 700 !important;
+.rail::-webkit-scrollbar {
+  display: none;
 }
 
-/* ─── Noise texture overlay (subtle grain effect) ──────────────────────── */
-.noise-overlay::before {
-  content: "";
+.panel {
+  flex: 0 0 100vw;
+  width: 100vw;
+  height: 100dvh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior-y: contain;
+}
+
+/* Consistent inner gutter across every panel. Bottom padding always clears
+   the fixed navigation bar. */
+.panel-inner {
+  width: 100%;
+  margin: 0 auto;
+  padding: clamp(5rem, 12vh, 8rem) var(--rail-gap) clamp(4rem, 10vh, 6rem);
+  max-width: 1500px;
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Phones have no room for desktop-sized gutters. */
+@media (max-width: 640px) {
+  .panel-inner {
+    padding: 4.5rem 1.25rem 4.5rem;
+  }
+}
+
+/* Component styles live in @layer components so Tailwind utilities still win.
+   Unlayered `.doc h2 { font-size }` would otherwise beat `text-[10.5px]`. */
+@layer components {
+  /* ═══════════════════════════════════════════════════════════════════════════
+     TYPE UTILITIES
+     ═══════════════════════════════════════════════════════════════════════════ */
+  /* Solid, heavy sans — nothing thin. */
+  .display {
+    font-family: var(--font-sans);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 0.96;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-paper-mute);
+  }
+
+  .prose-dim {
+    color: var(--color-paper-dim);
+    line-height: 1.7;
+  }
+
+  /* ── Underline that grows on hover, used for text links ─────────────────── */
+  .link-underline {
+    position: relative;
+    color: var(--color-azure-300);
+    transition: color 0.2s var(--ease-out-soft);
+  }
+  .link-underline::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.35s var(--ease-out-soft);
+  }
+  .link-underline:hover {
+    color: var(--color-azure-200);
+  }
+  .link-underline:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     SURFACES
+     ═══════════════════════════════════════════════════════════════════════════ */
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    color: var(--color-paper-dim);
+    background: rgba(116, 160, 255, 0.06);
+    border: 1px solid var(--line);
+    white-space: nowrap;
+    transition: border-color 0.25s var(--ease-out-soft), color 0.25s var(--ease-out-soft);
+  }
+  .chip:hover {
+    border-color: var(--line-strong);
+    color: var(--color-azure-200);
+  }
+
+  /* Primary / secondary buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-weight: 500;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: transform 0.2s var(--ease-out-soft), background-color 0.2s, border-color 0.2s,
+      color 0.2s;
+  }
+  .btn:active {
+    transform: translateY(1px);
+  }
+  .btn-primary {
+    background: var(--color-azure-500);
+    color: #fff;
+  }
+  .btn-primary:hover {
+    background: var(--color-azure-400);
+  }
+  .btn-ghost {
+    border-color: var(--line-strong);
+    color: var(--color-paper-dim);
+  }
+  .btn-ghost:hover {
+    border-color: var(--color-azure-500);
+    color: var(--color-azure-200);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     DOCUMENT PAGES (/work/[slug], /resume) — normal vertical scroll.
+     ═══════════════════════════════════════════════════════════════════════════ */
+  .doc {
+    max-width: 46rem;
+    margin: 0 auto;
+    padding: clamp(4rem, 10vw, 7rem) clamp(1.25rem, 5vw, 2rem) 7rem;
+  }
+  .doc h2 {
+    font-size: clamp(1.4rem, 3vw, 1.75rem);
+    margin-top: 3.5rem;
+    margin-bottom: 1rem;
+  }
+  .doc p {
+    color: var(--color-paper-dim);
+    line-height: 1.75;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   AMBIENT BACKGROUND — a single soft field, not four stacked effects.
+   ═══════════════════════════════════════════════════════════════════════════ */
+.ambient {
   position: fixed;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  z-index: -1;
   pointer-events: none;
-  z-index: 9999;
-  opacity: 0.025;
+  background:
+    radial-gradient(70rem 40rem at 18% -10%, rgba(79, 132, 245, 0.1), transparent 60%),
+    radial-gradient(50rem 34rem at 92% 108%, rgba(53, 104, 218, 0.08), transparent 62%),
+    var(--color-ink-950);
 }
 
-/* ─── Gradient border utility ──────────────────────────────────────────── */
-.gradient-border {
-  position: relative;
-}
-.gradient-border::before {
+/* Faint rule grid — visible enough to give depth, quiet enough to ignore */
+.ambient::after {
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(135deg, var(--color-electric-500), var(--color-brass-500));
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-}
-
-/* ─── Glow effects ─────────────────────────────────────────────────────── */
-.glow-electric {
-  box-shadow: 0 0 30px rgba(20, 184, 166, 0.15), 0 0 60px rgba(20, 184, 166, 0.05);
-}
-.glow-brass {
-  box-shadow: 0 0 30px rgba(163, 142, 84, 0.15), 0 0 60px rgba(163, 142, 84, 0.05);
-}
-
-/* ─── Grid background pattern ──────────────────────────────────────────── */
-.grid-bg {
   background-image:
-    linear-gradient(rgba(20, 184, 166, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(20, 184, 166, 0.03) 1px, transparent 1px);
-  background-size: 60px 60px;
+    linear-gradient(rgba(140, 165, 220, 0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(140, 165, 220, 0.028) 1px, transparent 1px);
+  background-size: 84px 84px;
 }
 
-/* ─── Vertical text ────────────────────────────────────────────────────── */
-.vertical-text {
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  transform: rotate(180deg);
+/* ═══════════════════════════════════════════════════════════════════════════
+   ENTRANCE — a small, reusable reveal. Applied by IntersectionObserver.
+   ═══════════════════════════════════════════════════════════════════════════ */
+/* Visible by default. The hidden state only applies once the rail has said
+   it is actually going to animate — so a JS failure, an unsupported browser
+   or an observer that never fires leaves the content readable rather than
+   invisible. */
+.js-reveal .reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.7s var(--ease-out-soft), transform 0.7s var(--ease-out-soft);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.js-reveal .reveal.is-in {
+  opacity: 1;
+  transform: none;
 }
 
-/* ─── Tag pill ─────────────────────────────────────────────────────────── */
-.tech-tag {
-  display: inline-flex;
-  align-items: center;
-  padding: 2px 10px;
-  border-radius: 999px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  background-color: rgba(20, 184, 166, 0.1);
-  color: var(--color-electric-400);
-  border: 1px solid rgba(20, 184, 166, 0.25);
-  white-space: nowrap;
+/* ═══════════════════════════════════════════════════════════════════════════
+   ACCESSIBILITY
+   ═══════════════════════════════════════════════════════════════════════════ */
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -60px;
+  z-index: 200;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: var(--color-azure-500);
+  color: #fff;
+  font-size: 13px;
+  transition: top 0.2s var(--ease-out-soft);
+}
+.skip-link:focus {
+  top: 12px;
 }
 
-/* ─── Fixed viewport for scrolljack ────────────────────────────────────── */
-html, body {
+/* Honour the OS setting. Snap loosens so nothing is yanked around. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .rail {
+    scroll-snap-type: x proximity;
+  }
+  .js-reveal .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PRINT — /resume renders as a clean single-column document on paper.
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media print {
+  @page {
+    margin: 14mm 15mm;
+    size: A4;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    color: #111 !important;
+    font-size: 10.5pt;
+    line-height: 1.42;
+  }
+
+  .ambient,
+  .no-print {
+    display: none !important;
+  }
+
+  .doc {
+    max-width: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Flatten every dark surface for paper */
+  .card,
+  .chip {
+    background: transparent !important;
+    border-color: #ccc !important;
+    backdrop-filter: none !important;
+    color: #111 !important;
+  }
+
+  a {
+    color: #14448c !important;
+    text-decoration: none;
+  }
+
+  h1,
+  h2,
+  h3 {
+    color: #0b1f45 !important;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  li,
+  p {
+    color: #222 !important;
+    orphans: 3;
+    widows: 3;
+  }
+
+  section,
+  li {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .js-reveal .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   STICKY NOTES — real paper, taped on at an angle.
+   ═══════════════════════════════════════════════════════════════════════════ */
+@layer components {
+  .sticky-note {
+    position: relative;
+    padding: 14px 15px 15px;
+    border-radius: 2px;
+    color: #2a2a26;
+    font-size: 12.5px;
+    line-height: 1.45;
+    box-shadow:
+      0 10px 22px rgba(0, 0, 0, 0.45),
+      0 2px 5px rgba(0, 0, 0, 0.3);
+    transition: transform 0.28s var(--ease-out-soft), box-shadow 0.28s var(--ease-out-soft);
+    /* The lower corner curls very slightly, like paper does. */
+    clip-path: polygon(0 0, 100% 0, 100% 92%, 94% 100%, 0 100%);
+  }
+
+  .sticky-note::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 18px;
+    height: 18px;
+    background: linear-gradient(135deg, transparent 48%, rgba(0, 0, 0, 0.16) 50%);
+  }
+
+  /* The strip of tape holding it on. */
+  .sticky-note::before {
+    content: "";
+    position: absolute;
+    top: -9px;
+    left: 50%;
+    width: 58px;
+    height: 18px;
+    transform: translateX(-50%) rotate(-2.5deg);
+    background: rgba(226, 235, 255, 0.26);
+    border-left: 1px solid rgba(255, 255, 255, 0.14);
+    border-right: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  }
+
+  .sticky-note:hover {
+    transform: rotate(0deg) translateY(-3px) scale(1.03);
+    box-shadow:
+      0 18px 34px rgba(0, 0, 0, 0.5),
+      0 3px 8px rgba(0, 0, 0, 0.32);
+  }
+
+  .sticky-note-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.42);
+    margin-bottom: 4px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DEMO SLOT — the frame a project video drops into.
+   ═══════════════════════════════════════════════════════════════════════════ */
+@layer components {
+  .demo-slot {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    background:
+      radial-gradient(60% 70% at 50% 0%, rgba(116, 160, 255, 0.09), transparent 70%),
+      #0a0f1a;
+    border: 1px solid var(--line);
+  }
+
+  /* Corner brackets — reads as a viewport rather than an empty div. */
+  .demo-slot .bracket {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-color: rgba(116, 160, 255, 0.4);
+    border-style: solid;
+    border-width: 0;
+  }
+  .demo-slot .bracket.tl { top: 12px; left: 12px; border-top-width: 1.5px; border-left-width: 1.5px; }
+  .demo-slot .bracket.tr { top: 12px; right: 12px; border-top-width: 1.5px; border-right-width: 1.5px; }
+  .demo-slot .bracket.bl { bottom: 12px; left: 12px; border-bottom-width: 1.5px; border-left-width: 1.5px; }
+  .demo-slot .bracket.br { bottom: 12px; right: 12px; border-bottom-width: 1.5px; border-right-width: 1.5px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FLOATING STACK — slow drifting glyphs behind the content.
+   ═══════════════════════════════════════════════════════════════════════════ */
+.floaters {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
   overflow: hidden;
-  height: 100%;
+}
+
+.floater {
+  position: absolute;
+  color: var(--color-azure-300);
+  animation: drift var(--drift-duration, 26s) ease-in-out infinite;
+  animation-delay: var(--drift-delay, 0s);
+  will-change: transform;
+}
+
+@keyframes drift {
+  0%,
+  100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  33%  { transform: translate3d(10px, -16px, 0) rotate(4deg); }
+  66%  { transform: translate3d(-8px, 10px, 0) rotate(-3deg); }
+}
+
+/* The ghost numeral behind each project title. */
+.ghost-index {
+  position: absolute;
+  top: -0.34em;
+  left: -0.06em;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  color: rgba(140, 165, 220, 0.055);
+  pointer-events: none;
+  user-select: none;
+  z-index: -1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floater { animation: none; }
 }

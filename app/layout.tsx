@@ -1,22 +1,36 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SITE } from "@/lib/config";
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"], display: "swap" });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"], display: "swap" });
-
+const sans = Geist({ variable: "--font-sans-src", subsets: ["latin"], display: "swap" });
+const mono = Geist_Mono({ variable: "--font-mono-src", subsets: ["latin"], display: "swap" });
 export const metadata: Metadata = {
-  title: SITE.title,
-  description: SITE.description,
   metadataBase: new URL(SITE.url),
-  keywords: ["Sanjeev Srinivas", "Software Developer", "Backend Engineer", "Data Science", "Cloud Infrastructure", "Distributed Systems", "Go", "Python", "Next.js"],
-  authors: [{ name: SITE.name }],
+  title: {
+    default: SITE.title,
+    template: `%s — ${SITE.name}`,
+  },
+  description: SITE.description,
+  keywords: [
+    "Sanjeev Srinivas",
+    "Backend Engineer",
+    "Distributed Systems",
+    "ActivityPub",
+    "Deepfake Detection",
+    "Go",
+    "Python",
+    "Next.js",
+  ],
+  authors: [{ name: SITE.fullName, url: SITE.url }],
+  creator: SITE.fullName,
+  alternates: { canonical: "/" },
   openGraph: {
     title: SITE.title,
     description: SITE.description,
     url: SITE.url,
     siteName: SITE.domain,
+    locale: "en_IN",
     type: "website",
   },
   twitter: {
@@ -24,12 +38,24 @@ export const metadata: Metadata = {
     title: SITE.title,
     description: SITE.description,
   },
+  robots: { index: true, follow: true },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#06090f",
+  colorScheme: "dark",
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full`}>
-      <body className="min-h-full flex flex-col antialiased noise-overlay">{children}</body>
+    <html lang="en" className={`${sans.variable} ${mono.variable}`}>
+      <body>
+        <div className="ambient" aria-hidden="true" />
+        {children}
+      </body>
     </html>
   );
 }
